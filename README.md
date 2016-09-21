@@ -6,6 +6,8 @@ This is the project for managing the interoperability of the plane. The majority
 to the nature of the competition server's python based API.
 
 ##Developers
+The main script that is used for mavlink recieve and broadcast is <b>Python 2.7</b>
+Currently there are no procedures for Python 3 and above, so it is essential to use Python 2.7 at this time.
 
 ##Integration and Testing
 
