@@ -7,5 +7,10 @@
     "http":{
         "host":"127.0.0.1",
         "port":"80"
+    },
+
+    "mavlink":{
+        "host":"localhost",
+        "port":"8080"
     }
 }

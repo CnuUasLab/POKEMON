@@ -12,5 +12,3 @@ import json
 # Load JSON data from config file
 with open('./config.json') as data_file:
     data = json.loads(data_file.read().replace("\n", ""))
-
-print(data["auvsi"]["host"])
