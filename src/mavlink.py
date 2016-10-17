@@ -34,7 +34,7 @@ class Mavlink():
             statusPacket = mav.recv()
             status = mav.recv_msg()
             if(status!=None):
-
+                pass
     def getMavPacket(self):
         self.new_packet = None
         return self.current_packet
