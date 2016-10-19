@@ -17,7 +17,12 @@ import json
 import socket
 import thread
 
-
+#====================
+# Mavlink module class. Creates new instance of Mavlink Module
+#
+# ip: - Is the hostname of the place recieving packets.
+# port - Is the port on which you recieve packets. (usually 14550)
+#====================
 class Mavlink():
     def __init__(self, ip, port):
         self.target_ip   = ip
@@ -33,8 +38,10 @@ class Mavlink():
         while True:
             statusPacket = mav.recv()
             status = mav.recv_msg()
-            if(status!=None):
-                pass
+            if(status!=None and not(self.new_packet)):
+                self.new_packet = True
+                self.current_packet = statusPacket
+
     def getMavPacket(self):
         self.new_packet = None
         return self.current_packet
