@@ -13,6 +13,10 @@ The front end of the application is to be built using an electron based build.
 The basic setup involves installing pymavlink as a dependency:
 ` sudo pip install pymavlink`
 
+You also need to update the competition's interoperability competition server repository so that we can use their client tools:
+</br> `git submodule init`
+</br> `git submodule update`
+
 ##Integration and Testing
 ###Automated Testing
 Main automation testing is done through Software in the Loop (SITL)
