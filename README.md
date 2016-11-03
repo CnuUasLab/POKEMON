@@ -13,6 +13,9 @@ The front end of the application is to be built using an electron based build.
 The basic setup involves installing pymavlink as a dependency:
 ` sudo pip install pymavlink`
 
+For environmental variable usage for packages in seperate directories:
+` sudo pip install python-dotenv`
+
 You also need to update the competition's interoperability competition server repository so that we can use their client tools:
 </br> `git submodule init`
 </br> `git submodule update`

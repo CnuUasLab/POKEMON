@@ -1,13 +1,14 @@
 #=======================================================#
 # Main class for handeling Interoperability operations. #
 #                                                       #
-#             Author: davidkroell                       #
-#             Version: 0.0.1                            #
+#                Author: davidkroell                    #
+#                  Version: 0.0.1                       #
 #=======================================================#
 
 from mav import Mavlink
 import json
 import sys
+import client
 
 
 # Extract JSON data from configs.
