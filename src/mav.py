@@ -49,6 +49,8 @@ class Mavlink():
         if(self.newPacketAvailable()):
             self.new_packet = None
             return self.current_packet
+        else:
+            return None
 
     # Fucntion to return whether there is a new packet available
     def newPacketAvailable(self):
