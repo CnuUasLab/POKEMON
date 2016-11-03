@@ -14,7 +14,7 @@ The basic setup involves installing pymavlink as a dependency:
 ` sudo pip install pymavlink`
 
 ##Integration and Testing
-
+###Automated Testing
 Main automation testing is done through Software in the Loop (SITL)
 When you execute SITL, load the main Waypoint data, and then run.
 Find your ip address on your computer by typing `ifconfig` in command line.
