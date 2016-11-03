@@ -31,17 +31,33 @@ class Mavlink():
         self.new_packet = None
         self.current_packet = ""
 
-        thread.start_new_thread(startUDPStream, ())
+        self.mav = mavutil.mavudp(self.target_ip+":"+self.target_port, ())
 
+        thread.start_new_thread(self.startUDPStream, ())
+
+    # Function called in the thread to constantly update packets.
     def startUDPStream(self):
-        mav = mavutil.mavudp(self.ip+":"+self.port, ())
         while True:
-            statusPacket = mav.recv()
-            status = mav.recv_msg()
+            #	statusPacket = mav.recv()
+            status = self.mav.recv_msg()
             if(status!=None and not(self.new_packet)):
                 self.new_packet = True
-                self.current_packet = statusPacket
+		self.current_packet = status
 
+    # Accessor, to get the current packet
     def getMavPacket(self):
-        self.new_packet = None
-        return self.current_packet
+        if(self.newPacketAvailable()):
+            self.new_packet = None
+            return self.current_packet
+
+    # Fucntion to return whether there is a new packet available
+    def newPacketAvailable(self):
+        return self.new_packet
+
+    # Posts data to the airplane.
+    def postData(self, packet):
+        '''
+        We gotta figure out how to do this.
+        I'm researching it.
+        '''
+        pass
