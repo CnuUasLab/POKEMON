@@ -28,10 +28,11 @@ class Mavlink():
         self.target_ip   = ip
         self.target_port = port
 
-        self.new_packet = None
+        self.new_packet = False
         self.current_packet = ""
 
-        self.mav = mavutil.mavudp(self.target_ip+":"+self.target_port, ())
+        print "Starting mavudp session on - "+str(self.target_ip)+":"+str(self.target_port)
+        self.mav = mavutil.mavudp(str(self.target_ip)+":"+str(self.target_port), input=True)
 
         thread.start_new_thread(self.startUDPStream, ())
 
@@ -46,15 +47,11 @@ class Mavlink():
 
     # Accessor, to get the current packet
     def getMavPacket(self):
-        if(self.newPacketAvailable()):
-            self.new_packet = None
+        if(self.new_packet):
+            self.new_packet = False
             return self.current_packet
         else:
             return None
-
-    # Fucntion to return whether there is a new packet available
-    def newPacketAvailable(self):
-        return self.new_packet
 
     # Posts data to the airplane.
     def postData(self, packet):
