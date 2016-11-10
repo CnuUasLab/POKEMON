@@ -20,6 +20,10 @@ You also need to update the competition's interoperability competition server re
 </br> `git submodule init`
 </br> `git submodule update`
 
+Inorder to gain interface access to the electron module, you will need to install all
+packages regarding electron.
+You can execute this with the following command:
+` sudo npm install `
 ##Integration and Testing
 ###Automated Testing
 Main automation testing is done through Software in the Loop (SITL)
