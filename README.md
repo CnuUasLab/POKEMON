@@ -11,10 +11,12 @@ Currently there are no procedures for Python 3 and above, so it is essential to 
 The front end of the application is to be built using an electron based build.
 ### Setup
 The basic setup involves installing pymavlink as a dependency:
-` sudo pip install pymavlink`
+`sudo pip install pymavlink`
 
-For environmental variable usage for packages in seperate directories:
-` sudo pip install python-dotenv`
+Other packages to download: 
+`sudo pip install python-dotenv`
+`sudo pip install futures`
+`sudo pip install requests`
 
 You also need to update the competition's interoperability competition server repository so that we can use their client tools:
 </br> `git submodule init`
