@@ -6,6 +6,7 @@
 #=======================================================#
 
 from mav import Mavlink
+from mission import Mission
 import json
 import sys
 
@@ -15,8 +16,12 @@ with open('./config.json') as data_file:
 	constants = json.load(data_file)
 
 print "Setting up mavlink recieving protocol - Instantiating modules..."
+
 # Instantiate a Mavlink module.
 mavl = Mavlink(constants['mavl-incoming']['host'], constants['mavl-incoming']['port'])
+
+#Instantiate Mission module.
+miss = Mission(constants['auvsi']['host'], constants['auvsi']['port'], )
 
 print "Ready to recieve Mavlink Packets..."
 while True:
