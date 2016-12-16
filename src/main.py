@@ -1,3 +1,4 @@
+#!/bin/python
 #=======================================================#
 # Main class for handeling Interoperability operations. #
 #                                                       #
@@ -7,23 +8,42 @@
 
 from mav import Mavlink
 from mission import Mission
+from utils import Utils
+
 import json
 import sys
 
+
+util = Utils()
 
 # Extract JSON data from configs.
 with open('./config.json') as data_file:
 	constants = json.load(data_file)
 
-print "Setting up mavlink recieving protocol - Instantiating modules..."
+# Start Telemetry module to load data into.
+telemetry = {}
+
+util.succLog("Setting up mavlink recieving protocol - Instantiating modules...")
+
 
 # Instantiate a Mavlink module.
-mavl = Mavlink(constants['mavl-incoming']['host'], constants['mavl-incoming']['port'])
+mavl = Mavlink(
+		constants['mavl-incoming']['host'],
+		constants['mavl-incoming']['port']
+	      )
 
 #Instantiate Mission module.
-miss = Mission(constants['auvsi']['host'], constants['auvsi']['port'], )
+miss = Mission(
+		constants['auvsi']['host'], 
+		constants['auvsi']['port'], 
+		constants['auvsi']['username'], 
+		constants['auvsi']['password']
+		)
 
-print "Ready to recieve Mavlink Packets..."
+mission_data = miss.getMissionData()
+print mission_data.mission_waypoints
+
+util.log("Ready to recieve Mavlink Packets...")
 while True:
 	try:
         	currPacket = mavl.getMavPacket()
@@ -31,14 +51,28 @@ while True:
         	if(currPacket != None):
                 	if (currPacket.get_type() == "GLOBAL_POSITION_INT"):
                         	lonLatPacket = currPacket
-                        	print lonLatPacket
 
-                	# post data to competition server
+				# populate the longitude element of the telemetry module
+				telemetry['longitude'] = float(lonLatPacket.lon)/10000000 
+				telemetry['latitude'] = float(lonLatPacket.lat)/10000000
+				telemetry['heading'] = float(lonLatPacket.hdg)/1000
+				telemetry['altitude'] = float(lonLatPacket.alt)/10000
+
+				print telemetry
+				# post telemetry to the Competition server.
+				miss.postTelemetry(
+							telemetry['latitude'],
+							telemetry['longitude'],
+							telemetry['altitude'],
+							telemetry['heading']
+					  	)
 
                 	# Notify that a packet has been recieved
 
+
                 	# post data to the socket server for Electron
-                	pass
+                	
+			pass
         	# Update Obstacle Data
 	except KeyboardInterrupt:
 		break
