@@ -7,6 +7,7 @@
 #============================================#
 
 import sys
+from utils import Utils
 
 sys.path.insert(0, "../interop/client")
 import interop
@@ -23,7 +24,9 @@ import interop
 #
 #==================================
 class Mission():
-	def __init__(hst, prt, usr, pss):
+	def __init__(self, hst, prt, usr, pss):
+		self.util = Utils()
+
 		self.host = hst
 		self.port = prt
 
@@ -35,12 +38,26 @@ class Mission():
 		self.username = usr
 		self.password = pss
 
-		self.client = interop.Client( url=self.host+":"+self.port
-						username=self.username
-						password=self.password
-						)
-
+		self.logged_in = False
+		try:
+			self.client = interop.Client( url=self.host+":"+self.port,
+							username=self.username,
+							password=self.password
+							)
+			self.logged_in = True
+			self.util.succLog("Successfully logged into competition server.")
+		except interop.exceptions.InteropError:
+			self.util.errLog("ERROR: Invalid login to competition server.")
 		
+	#===================
+	#
+	# Returns whether we're logged
+	# into the competition server or not.
+	#
+	#===================
+	def isLoggedIn(self):
+		return self.logged_in
+
 	#========================
 	# Post telemetry to the server.
 	# 
@@ -50,15 +67,15 @@ class Mission():
 	#	  alt - altitutde of the plane.
 	#	  hdg - uas heading fo plane.
 	#========================
-	def postTelemetry(lat=38.145245, lon=-76.427946, alt=50, hdg=90):
+	def postTelemetry(self, lat=38.145245, lon=-76.427946, alt=50, hdg=90):
 		
 		telemetry = interop.Telemetry(latitude=lat,
                               			longitude=lon,
                               			altitude_msl=alt,
                               			uas_heading=hdg
 						)
-
-		self.client.post_telemetry(telemetry)
+		if (self.isLoggedIn()):
+			self.client.post_telemetry(telemetry)
 
 	#=============================
 	# 	   Post a detected target on
@@ -75,7 +92,7 @@ class Mission():
 	#	  color - color of the target text.
 	#	  image_path - path of the image where target is found.
 	#============================
-	def postTarget(typ='standard', lat=38.145215, lon=-76.427942, ori='n', shp='square',
+	def postTarget(self, typ='standard', lat=38.145215, lon=-76.427942, ori='n', shp='square',
 				 bgc='green', letter='A', color='white', image_path='~/image.png'):
 		
 		target = interop.Target(type=typ,
@@ -98,7 +115,7 @@ class Mission():
 	# Retrieve the mission data for the competition. 
 	#
 	#==========================
-	def getMissionData():
+	def getMissionData(self):
 		return self.client.get_missions
 	
 	#==========================
@@ -106,7 +123,7 @@ class Mission():
 	# Retrieve obstacles for the mission.
 	#
 	#==========================
-	def getObstacles():
+	def getObstacles(self):
 		return self.client.get_obstacles()
 
 
