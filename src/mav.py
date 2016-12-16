@@ -10,8 +10,8 @@
 #								#
 #===============================================================#
 
-from pymavlink import mavlinkv11 as mavlink
 from pymavlink import mavutil
+from utils import Utils
 
 import json
 import socket
@@ -25,13 +25,15 @@ import thread
 #====================
 class Mavlink():
     def __init__(self, ip, port):
-        self.target_ip   = ip
+        self.util = Utils()
+
+	self.target_ip   = ip
         self.target_port = port
 
         self.new_packet = False
         self.current_packet = ""
 
-        print "Starting mavudp session on - "+str(self.target_ip)+":"+str(self.target_port)
+        self.util.log("Starting mavudp session on - "+str(self.target_ip)+":"+str(self.target_port))
         self.mav = mavutil.mavudp(str(self.target_ip)+":"+str(self.target_port), input=True)
 
         thread.start_new_thread(self.startUDPStream, ())
