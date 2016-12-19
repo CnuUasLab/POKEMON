@@ -40,8 +40,9 @@ miss = Mission(
 		constants['auvsi']['password']
 		)
 
+# Grab obstacle/server data from the competition server.
 mission_data = miss.getMissionData()
-print mission_data.mission_waypoints
+server_data = miss.getServerData()
 
 util.log("Ready to recieve Mavlink Packets...")
 while True:
@@ -66,13 +67,9 @@ while True:
 							telemetry['altitude'],
 							telemetry['heading']
 					  	)
+		# Update mission data constantly.
+		mission_data = miss.getMissionData()
+               	server_data = miss.getServerData()
 
-                	# Notify that a packet has been recieved
-
-
-                	# post data to the socket server for Electron
-                	
-			pass
-        	# Update Obstacle Data
 	except KeyboardInterrupt:
 		break

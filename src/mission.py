@@ -31,9 +31,11 @@ class Mission():
 		self.port = prt
 
 		self.URIs = {}
-		self.URIs['LOG'] = "/login"
-		self.URIs['OBS'] = "/obstacles"
-		self.URIs['TEL'] = "/telemetry"
+		self.URIs['LOG'] = "/api/login"
+		self.URIs['OBS'] = "/api/obstacles"
+		self.URIs['TEL'] = "/api/telemetry"
+		self.URIs['MIS'] = "/api/missions"
+		self.URIs['SRV'] = "/api/server_info"
 
 		self.username = usr
 		self.password = pss
@@ -116,14 +118,17 @@ class Mission():
 	#
 	#==========================
 	def getMissionData(self):
-		return self.client.get_missions
+		r = self.client.get(self.URIs['MIS'])
+		return r.json()
+		
 	
 	#==========================
 	#
-	# Retrieve obstacles for the mission.
+	# Retrieve Server Parameters
 	#
 	#==========================
-	def getObstacles(self):
-		return self.client.get_obstacles()
+	def getServerData(self):
+		r = self.client.get(self.URIs['SRV'])
+		return r.json()
 
 
