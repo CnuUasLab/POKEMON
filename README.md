@@ -14,7 +14,6 @@ The basic setup involves installing pymavlink as a dependency:
 `sudo pip install pymavlink`
 
 Other packages to download: 
-`sudo pip install python-dotenv`
 `sudo pip install futures`
 `sudo pip install requests`
 
