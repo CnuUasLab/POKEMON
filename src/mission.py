@@ -7,9 +7,10 @@
 #============================================#
 
 import sys
+import requests
 from utils import Utils
 
-sys.path.insert(0, "../interop/client")
+sys.path.insert(0, "../interop/client/")
 import interop
 
 #==================================
@@ -50,7 +51,10 @@ class Mission():
 			self.util.succLog("Successfully logged into competition server.")
 		except interop.exceptions.InteropError:
 			self.util.errLog("ERROR: Invalid login to competition server.")
-		
+		except requests.exceptions.ConnectionError:
+			self.util.errLog("Connection error with competition server - Are you sure the Server is Running?")
+			sys.exit(0)
+
 	#===================
 	#
 	# Returns whether we're logged
@@ -62,7 +66,7 @@ class Mission():
 
 	#========================
 	# Post telemetry to the server.
-	# 
+	#
 	#-------params:----------
 	#	  lat - latitude value of plane.
 	#	  lon - longitude value of plane.
@@ -70,7 +74,7 @@ class Mission():
 	#	  hdg - uas heading fo plane.
 	#========================
 	def postTelemetry(self, lat=38.145245, lon=-76.427946, alt=50, hdg=90):
-		
+
 		telemetry = interop.Telemetry(latitude=lat,
                               			longitude=lon,
                               			altitude_msl=alt,
@@ -96,7 +100,7 @@ class Mission():
 	#============================
 	def postTarget(self, typ='standard', lat=38.145215, lon=-76.427942, ori='n', shp='square',
 				 bgc='green', letter='A', color='white', image_path='~/image.png'):
-		
+
 		target = interop.Target(type=typ,
                         latitude=lat,
                         longitude=lon,
@@ -120,8 +124,8 @@ class Mission():
 	def getMissionData(self):
 		r = self.client.get(self.URIs['MIS'])
 		return r.json()
-		
-	
+
+
 	#==========================
 	#
 	# Retrieve Server Parameters

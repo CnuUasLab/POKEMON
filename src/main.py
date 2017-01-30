@@ -42,7 +42,7 @@ miss = Mission(
 
 # Grab obstacle/server data from the competition server.
 mission_data = miss.getMissionData()
-server_data = miss.getServerData()
+#server_data = miss.getServerData()
 
 util.log("Ready to recieve Mavlink Packets...")
 while True:
@@ -50,8 +50,11 @@ while True:
         	currPacket = mavl.getMavPacket()
         	lonLatPacket = " "
         	if(currPacket != None):
+
                 	if (currPacket.get_type() == "GLOBAL_POSITION_INT"):
                         	lonLatPacket = currPacket
+
+				print lonLatPacket
 
 				# populate the longitude element of the telemetry module
 				telemetry['longitude'] = float(lonLatPacket.lon)/10000000 
@@ -69,7 +72,7 @@ while True:
 					  	)
 		# Update mission data constantly.
 		mission_data = miss.getMissionData()
-               	server_data = miss.getServerData()
+               	#server_data = miss.getServerData()
 
 	except KeyboardInterrupt:
 		break
