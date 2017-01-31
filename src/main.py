@@ -34,14 +34,14 @@ mavl = Mavlink(
 
 #Instantiate Mission module.
 miss = Mission(
-		constants['auvsi']['host'], 
-		constants['auvsi']['port'], 
-		constants['auvsi']['username'], 
+		constants['auvsi']['host'],
+		constants['auvsi']['port'],
+		constants['auvsi']['username'],
 		constants['auvsi']['password']
 		)
 
 # Grab obstacle/server data from the competition server.
-mission_data = miss.getMissionData()
+#mission_data = miss.getMissionData()
 #server_data = miss.getServerData()
 
 util.log("Ready to recieve Mavlink Packets...")
@@ -54,10 +54,8 @@ while True:
                 	if (currPacket.get_type() == "GLOBAL_POSITION_INT"):
                         	lonLatPacket = currPacket
 
-				print lonLatPacket
-
 				# populate the longitude element of the telemetry module
-				telemetry['longitude'] = float(lonLatPacket.lon)/10000000 
+				telemetry['longitude'] = float(lonLatPacket.lon)/10000000
 				telemetry['latitude'] = float(lonLatPacket.lat)/10000000
 				telemetry['heading'] = float(lonLatPacket.hdg)/1000
 				telemetry['altitude'] = float(lonLatPacket.alt)/10000
@@ -71,7 +69,7 @@ while True:
 							telemetry['heading']
 					  	)
 		# Update mission data constantly.
-		mission_data = miss.getMissionData()
+	#	mission_data = miss.getMissionData()	# --> This is not optimized. Chewing up frequency time...
                	#server_data = miss.getServerData()
 
 	except KeyboardInterrupt:
