@@ -41,9 +41,12 @@ miss = Mission(
 		)
 
 # Grab obstacle/server data from the competition server.
-#mission_data = miss.getMissionData()
-#server_data = miss.getServerData()
+mission_data = miss.getMissionData()
+server_data = miss.getServerData()
 
+print mission_data
+print "--------------------------------------------"
+print server_data
 util.log("Ready to recieve Mavlink Packets...")
 while True:
 	try:
@@ -69,7 +72,7 @@ while True:
 							telemetry['heading']
 					  	)
 		# Update mission data constantly.
-	#	mission_data = miss.getMissionData()	# --> This is not optimized. Chewing up frequency time...
+		mission_data = miss.getMissionData()	# --> This is not optimized. Chewing up frequency time...
                	#server_data = miss.getServerData()
 
 	except KeyboardInterrupt:
