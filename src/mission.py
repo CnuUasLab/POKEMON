@@ -64,6 +64,16 @@ class Mission():
 	def isLoggedIn(self):
 		return self.logged_in
 
+	#====================
+	#
+	# Grabs obstacle data from
+	# interop server.
+	#
+	#====================
+	def getObstacles(self):
+		r = self.client.get(self.URIs['OBS'])
+		return r.json()
+
 	#========================
 	# Post telemetry to the server.
 	#
@@ -117,8 +127,8 @@ class Mission():
     			self.client.put_target_image(target.id, image_data)
 
 	#==========================
-	# 
-	# Retrieve the mission data for the competition. 
+	#
+	# Retrieve the mission data for the competition.
 	#
 	#==========================
 	def getMissionData(self):
@@ -128,10 +138,11 @@ class Mission():
 
 	#==========================
 	#
-	# Retrieve Server Parameters
+	# Retrieve Server Parameters (Deprecated)
 	#
 	#==========================
 	def getServerData(self):
+		self.util.errLog('WARNING: Server Data retreval is deprecated on this system.');
 		r = self.client.get(self.URIs['SRV'])
 		return r.json()
 
