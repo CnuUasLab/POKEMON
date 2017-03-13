@@ -10,6 +10,10 @@ The main script that is used for mavlink recieve and broadcast is <b>Python 2.7<
 Currently there are no procedures for Python 3 and above, so it is essential to use Python 2.7 at this time.
 The front end of the application is to be built using an electron based build.
 ### Setup
+Make sure you have the python dev packages availble:
+sudo apt-get install python-dev
+sudo apt-get install python-pip
+
 The basic setup involves installing pymavlink as a dependency:
 `sudo pip install pymavlink`
 
