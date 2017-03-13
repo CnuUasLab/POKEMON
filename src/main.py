@@ -40,13 +40,13 @@ miss = Mission(
 		constants['auvsi']['password']
 		)
 
-# Grab obstacle/server data from the competition server.
+# Grab mission/server data from the competition server.
 mission_data = miss.getMissionData()
-server_data = miss.getServerData()
 
-print mission_data
-print "--------------------------------------------"
-print server_data
+obstacle_data = miss.getObstacles()
+
+waypoint_data = mission_data[0]['mission_waypoints']
+
 util.log("Ready to recieve Mavlink Packets...")
 while True:
 	try:
@@ -71,9 +71,12 @@ while True:
 							telemetry['altitude'],
 							telemetry['heading']
 					  	)
-		# Update mission data constantly.
-		mission_data = miss.getMissionData()	# --> This is not optimized. Chewing up frequency time...
-               	#server_data = miss.getServerData()
+				# Update Obstacle information.
+				# Process obstacle information for every telem update
+				# To get synchronous processing for DROPS
+
+				obstacle_data = miss.getObstacles()
+				print obstacle_data
 
 	except KeyboardInterrupt:
 		break
