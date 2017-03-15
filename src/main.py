@@ -67,10 +67,10 @@ while True:
 							telemetry['altitude'],
 							telemetry['heading']
 					  	)
+				if(missPacket != None):
+					print missPacket
 
 		missPacket = miss.getMissionComponents()
-#		if(missPacket != None):
-#			print missPacket
 
 	except KeyboardInterrupt:
 		break

@@ -95,7 +95,6 @@ class Mission():
 
 				self.mission_components['OBS'] = obstacle_data
 
-				self.mission_components['STI'] = self.client.get(self.URIs['TEL']).json()[0]['timestamp']
 				self.componentsAvailable = True
 
 	#========================
@@ -146,6 +145,9 @@ class Mission():
 						)
 		if (self.isLoggedIn()):
 			self.client.post_telemetry(telemetry)
+
+		self.mission_components['STI'] = self.client.get(self.URIs['TEL']).json()[len(self.client.get(self.URIs['TEL']).json())-1]['timestamp']
+
 
 	#=============================
 	# 	   Post a detected target on
