@@ -59,7 +59,7 @@ while True:
 				telemetry['heading'] = float(telemPacket.hdg)/1000
 				telemetry['altitude'] = float(telemPacket.alt)/10000
 
-				print telemetry
+#				print telemetry
 				# post telemetry to the Competition server.
 				miss.postTelemetry(
 							telemetry['latitude'],
@@ -67,8 +67,8 @@ while True:
 							telemetry['altitude'],
 							telemetry['heading']
 					  	)
-				if(missPacket != None):
-					print missPacket
+#				if(missPacket != None):
+#					print missPacket
 
 		missPacket = miss.getMissionComponents()
 
