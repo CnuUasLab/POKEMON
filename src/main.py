@@ -40,27 +40,26 @@ miss = Mission(
 		constants['auvsi']['password']
 		)
 
-# Grab obstacle/server data from the competition server.
-#mission_data = miss.getMissionData()
-#server_data = miss.getServerData()
+# Grab mission/server data from the competition server.
+missPacket = miss.getMissionComponents()
 
 util.log("Ready to recieve Mavlink Packets...")
 while True:
 	try:
-        	currPacket = mavl.getMavPacket()
+        	udpPacket = mavl.getMavPacket()
         	lonLatPacket = " "
-        	if(currPacket != None):
+        	if(udpPacket != None):
 
-                	if (currPacket.get_type() == "GLOBAL_POSITION_INT"):
-                        	lonLatPacket = currPacket
+                	if (udpPacket.get_type() == "GLOBAL_POSITION_INT"):
+                        	telemPacket = udpPacket
 
 				# populate the longitude element of the telemetry module
-				telemetry['longitude'] = float(lonLatPacket.lon)/10000000
-				telemetry['latitude'] = float(lonLatPacket.lat)/10000000
-				telemetry['heading'] = float(lonLatPacket.hdg)/1000
-				telemetry['altitude'] = float(lonLatPacket.alt)/10000
+				telemetry['longitude'] = float(telemPacket.lon)/10000000
+				telemetry['latitude'] = float(telemPacket.lat)/10000000
+				telemetry['heading'] = float(telemPacket.hdg)/1000
+				telemetry['altitude'] = float(telemPacket.alt)/10000
 
-				print telemetry
+#				print telemetry
 				# post telemetry to the Competition server.
 				miss.postTelemetry(
 							telemetry['latitude'],
@@ -68,9 +67,10 @@ while True:
 							telemetry['altitude'],
 							telemetry['heading']
 					  	)
-		# Update mission data constantly.
-	#	mission_data = miss.getMissionData()	# --> This is not optimized. Chewing up frequency time...
-               	#server_data = miss.getServerData()
+#				if(missPacket != None):
+#					print missPacket
+
+		missPacket = miss.getMissionComponents()
 
 	except KeyboardInterrupt:
 		break

@@ -8,6 +8,7 @@
 
 import sys
 import requests
+import thread
 from utils import Utils
 
 sys.path.insert(0, "../interop/client/")
@@ -36,7 +37,16 @@ class Mission():
 		self.URIs['OBS'] = "/api/obstacles"
 		self.URIs['TEL'] = "/api/telemetry"
 		self.URIs['MIS'] = "/api/missions"
-		self.URIs['SRV'] = "/api/server_info"
+
+		self.componentsAvailable = False
+
+		self.mission_components = {}
+
+		self.mission_components['OBS'] = {}
+		self.mission_components['WYP'] = {}
+		self.mission_components['STI'] = {}
+		self.mission_components['TAR'] = {}
+		self.mission_components['FLZ'] = {}
 
 		self.username = usr
 		self.password = pss
@@ -49,11 +59,54 @@ class Mission():
 							)
 			self.logged_in = True
 			self.util.succLog("Successfully logged into competition server.")
+
+			self.util.log("Attempting to start Competition Server Retrieval Thread.")
+			thread.start_new_thread(self.populateMissionComponents, ())
+			self.util.succLog("Successfully started mission retrieval thread.")
+
 		except interop.exceptions.InteropError:
 			self.util.errLog("ERROR: Invalid login to competition server.")
 		except requests.exceptions.ConnectionError:
 			self.util.errLog("Connection error with competition server - Are you sure the Server is Running?")
 			sys.exit(0)
+
+	#==================
+	#
+	# Populates the mission components we need after each
+	# time they are retrieved from the main task.
+	#
+	# Serves the purpose of synchronizing with mavlink thread module.
+	#
+	#==================
+	def populateMissionComponents(self):
+		while True:
+			if not self.componentsAvailable:
+				mission_data = self.getMissionData()[0]
+				obstacle_data = self.getObstacles()
+
+				# Update mission components
+
+				self.mission_components['WYP'] = mission_data['mission_waypoints']
+				self.mission_components['FLZ'] = mission_data['fly_zones']
+
+				self.mission_components['TAR']['emergent_lastKnown'] = mission_data['emergent_last_known_pos']
+				self.mission_components['TAR']['off_axis'] = mission_data['off_axis_target_pos']
+				self.mission_components['TAR']['air_drop'] = mission_data['air_drop_pos']
+
+				self.mission_components['OBS'] = obstacle_data
+
+				self.componentsAvailable = True
+
+	#========================
+	#
+	# Retrieves mission components from the mission class.
+	# Triggers condition variable to allow for a new set to be retrieved.
+	#
+	#========================
+	def getMissionComponents(self):
+		if self.componentsAvailable:
+			self.componentsAvailable = False
+			return self.mission_components
 
 	#===================
 	#
@@ -63,6 +116,16 @@ class Mission():
 	#===================
 	def isLoggedIn(self):
 		return self.logged_in
+
+	#====================
+	#
+	# Grabs obstacle data from
+	# interop server.
+	#
+	#====================
+	def getObstacles(self):
+		r = self.client.get(self.URIs['OBS'])
+		return r.json()
 
 	#========================
 	# Post telemetry to the server.
@@ -82,6 +145,9 @@ class Mission():
 						)
 		if (self.isLoggedIn()):
 			self.client.post_telemetry(telemetry)
+
+		self.mission_components['STI'] = self.client.get(self.URIs['TEL']).json()[len(self.client.get(self.URIs['TEL']).json())-1]['timestamp']
+
 
 	#=============================
 	# 	   Post a detected target on
@@ -117,22 +183,12 @@ class Mission():
     			self.client.put_target_image(target.id, image_data)
 
 	#==========================
-	# 
-	# Retrieve the mission data for the competition. 
+	#
+	# Retrieve the mission data for the competition.
 	#
 	#==========================
 	def getMissionData(self):
 		r = self.client.get(self.URIs['MIS'])
-		return r.json()
-
-
-	#==========================
-	#
-	# Retrieve Server Parameters
-	#
-	#==========================
-	def getServerData(self):
-		r = self.client.get(self.URIs['SRV'])
 		return r.json()
 
 
