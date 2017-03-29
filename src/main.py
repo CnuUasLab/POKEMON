@@ -12,13 +12,21 @@ from utils import Utils
 
 import json
 import sys
-
+import time
 
 util = Utils()
+try:
+	# Extract JSON data from configs.
+	with open('./config.json') as data_file:
+		constants = json.load(data_file)
+	util.succLog("Successfully extracted config data")
 
-# Extract JSON data from configs.
-with open('./config.json') as data_file:
-	constants = json.load(data_file)
+except IOError:
+	util.errLog("WARNING: Config file not found!")
+	util.errLog("Aborting operation! Make sure config.json exists in the /src directory.")
+	util.errLog("I'm angry so I'm going to dump everything into dumpFile.txt now! GoodBye!!!")
+#	util.dump() - > Being developed.
+	sys.exit(0)
 
 # Start Telemetry module to load data into.
 telemetry = {}
@@ -43,6 +51,9 @@ miss = Mission(
 # Grab mission/server data from the competition server.
 missPacket = miss.getMissionComponents()
 
+packets_sent = 0
+startTime = time.time()
+
 util.log("Ready to recieve Mavlink Packets...")
 while True:
 	try:
@@ -60,17 +71,33 @@ while True:
 				telemetry['altitude'] = float(telemPacket.alt)/10000
 
 #				print telemetry
-				# post telemetry to the Competition server.
-				miss.postTelemetry(
+
+				if (miss.isLoggedIn()):
+
+					# post telemetry to the Competition server.
+					miss.postTelemetry(
 							telemetry['latitude'],
 							telemetry['longitude'],
 							telemetry['altitude'],
 							telemetry['heading']
 					  	)
+					packets_sent += 1
+
 #				if(missPacket != None):
 #					print missPacket
 
-		missPacket = miss.getMissionComponents()
+#		missPacket = miss.getMissionComponents()
+
+		# Recalculate the number of seconds elapsed
+		elapsed = time.time() - startTime
+
+		# If one second has elapsed reset the clock and print the frequency.
+		if elapsed >= 1:
+			telemetry['frequency'] = packets_sent
+			print telemetry['frequency']
+
+			startTime = time.time()
+			packets_sent = 0
 
 	except KeyboardInterrupt:
 		break
