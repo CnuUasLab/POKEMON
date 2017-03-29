@@ -36,4 +36,8 @@ class Utils():
 
 	def getPreviousLogs(self):
 		return self.logs
-	
+
+#	def dump(self):
+#		f = open("./dumpFile.txt","w+")
+#		for (word in self.getPreviousLogs()):
+#			f.write(word)

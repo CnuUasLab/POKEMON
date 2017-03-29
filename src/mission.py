@@ -68,7 +68,7 @@ class Mission():
 			self.util.errLog("ERROR: Invalid login to competition server.")
 		except requests.exceptions.ConnectionError:
 			self.util.errLog("Connection error with competition server - Are you sure the Server is Running?")
-			sys.exit(0)
+			self.logged_in = False
 
 	#==================
 	#
