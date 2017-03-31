@@ -4,3 +4,6 @@
 [submodule "interop"]
 	path = interop
 	url = https://github.com/auvsi-suas/interop
+[submodule "electron.ui/ol2"]
+	path = electron.ui/ol2
+	url = http://github.com/openlayers/ol2.git
