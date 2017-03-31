@@ -28,8 +28,8 @@ You also need to update the competition's interoperability competition server re
 Inorder to gain interface access to the electron module, you will need to install all
 packages regarding electron.
 You can execute this with the following command:
-` sudo npm install `
-##Integration and Testing
+` sudo npm install -g`
+
 ###Automated Testing
 Main automation testing is done through Software in the Loop (SITL)
 When you execute SITL, load the main Waypoint data, and then run.
@@ -37,3 +37,4 @@ Find your ip address on your computer by typing `ifconfig` in command line.
 
 The IP address needs to be added to SITL's output by adding it through `output add <ipaddr>:14550`
 When you Add that and then run: `cd src && python main.py` the command should run.
+

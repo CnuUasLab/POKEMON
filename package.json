@@ -1,13 +1,18 @@
 {
   	"name"    	: "POKEMON",
   	"version" 	: "0.0.1",
-  	"main"    	: "./src/main.py",
+  	"main"    	: "electron.ui/main.js",
   	"description"	: "Probably should've added package.json earlier",
   	"dependencies"	: {
-		"electron-prebuilt":"*"
+		"electron":"*",
+		"electron-prebuilt" : "*"
   	},
 	"keywords"	: [ "POKEMON" ],
 	"author"	: "davidkroell",
+	"scripts"	: {
+				"start" : "./start-everything",
+				"start-electron" : "node electron.ui/main.js"
+			},
 	"private"	: true,
 	"license"	: "ISC"
 }
