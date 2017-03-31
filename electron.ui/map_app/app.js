@@ -1,7 +1,7 @@
 /**
  ***************************** CNU Imprint *******************************
  *                                                                       *
- * Map that helps visualize obsticle location using Open Street Map as a *
+ * Map that helps visualize obsticle location using Open Layers as a *
  * dependency for the application. Obsticle updates, and creations are   *
  * specified in methods, and functions.                                  *
  *                                                                       *
