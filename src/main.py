@@ -10,11 +10,64 @@ from mav import Mavlink
 from mission import Mission
 from utils import Utils
 
+# --> Sorry I'm breaking my own rule.
+import Tkinter
+from Tkinter import *
+
 import json
 import sys
 import time
 
 util = Utils()
+
+#===============================================
+#		Control Class for GUI
+#
+#	Description: Provides a control medium
+#	for us to change values in the Tkinter
+#	window.
+#
+#===============================================
+class FELCApp:
+	def __init__(self, master):
+
+		master.title('POKEMON:FSC')
+		master.configure(bg='black')
+
+		self.lon = IntVar()
+		self.lat = IntVar()
+		self.freq = IntVar()
+		self.srvtime = StringVar()
+
+		# Set initial Values for Window
+		self.lon.set(000.000000)
+		self.lat.set(000.000000)
+		self.freq.set(00)
+		self.srvtime.set("0000-00-00 00:00:00.000000")
+
+		frame = Frame(master)
+		frame.grid()
+
+		f2 = Frame(master, width=600, height=300)
+		f2.grid()
+
+	def changeVal(self, ident, val):
+		if ident == "lon":
+			self.lon.set(val)
+		elif ident == "lat":
+			self.lat.set(val)
+		elif ident == "freq":
+			self.freq.set(val)
+		elif ident == "srvtime":
+			self.srvtime.set(val)
+		else:
+			util.errlog("identity of tkinter value not found."+ident)
+
+
+statusRoot = Tk()
+FELC = FELCApp(statusRoot)
+
+
 try:
 	# Extract JSON data from configs.
 	with open('./config.json') as data_file:
@@ -40,7 +93,7 @@ mavl = Mavlink(
 		constants['mavl-incoming']['port']
 	      )
 
-#Instantiate Mission module.
+# Instantiate Mission module.
 miss = Mission(
 		constants['auvsi']['host'],
 		constants['auvsi']['port'],
@@ -53,6 +106,10 @@ missPacket = miss.getMissionComponents()
 
 packets_sent = 0
 startTime = time.time()
+
+# Starting the Tkinter window to display telemetry and frequency in an organized way.
+util.log("Initiating telemetry status console front end.")
+statusRoot.mainloop()
 
 util.log("Ready to recieve Mavlink Packets...")
 while True:
@@ -94,7 +151,7 @@ while True:
 		# If one second has elapsed reset the clock and print the frequency.
 		if elapsed >= 1:
 			telemetry['frequency'] = packets_sent
-			print telemetry['frequency']
+			#print telemetry['frequency']
 
 			startTime = time.time()
 			packets_sent = 0
