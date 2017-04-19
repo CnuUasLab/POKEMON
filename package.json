@@ -1,12 +1,20 @@
 {
   "name": "POKEMON",
   "version": "0.0.1",
+<<<<<<< HEAD
   "main": "electron.ui/main.js",
+=======
+  "main": "electron.ui/flec.js",
+>>>>>>> f087e7d9cea8eec61bc9f3e287e953dca732c7d3
   "description": "Probably should've added package.json earlier",
   "dependencies": {
     "electron": "*",
     "electron-prebuilt": "*",
+<<<<<<< HEAD
     "http": "0.0.0"
+=======
+    "socket.io": "^1.7.3"
+>>>>>>> f087e7d9cea8eec61bc9f3e287e953dca732c7d3
   },
   "keywords": [
     "POKEMON"
