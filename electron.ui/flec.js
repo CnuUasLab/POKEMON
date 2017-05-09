@@ -1,37 +1,49 @@
 'use strict';
 
-// Sample code
+// Importing required dependeincies.
+var electron 		= require('electron');
+var path 		= require('path');
+var url 		= require('url');
+var http 		= require('http');
 
-var electron = require('electron');
-var path = require('path');
-var url = require('url');
+// Initializing Application
+var app 		= electron.app;
+var browserWindow 	= electron.BrowserWindow;
 
-
-
-var app = electron.app;
-var browserWindow = electron.BrowserWindow;
-
-var mainWindow = null;
+// Initializing windows
+var mapWindow 		= null;
+var consoleWindow 	= null;
+var statusWindow 	= null;
 
 //when we close.
 app.on('window-on-closed', () => {
-	if (process.platfor != 'darwin') {
+	if (process.platform != 'darwin') {
 		app.quit();
 	}
 });
 
+
 // Create Browser window
 app.on('ready', () => {
-	mainWindow = new browserWindow({width: 1200, height: 800});
-	mainWindow.loadURL(url.format({
+	mapWindow = new browserWindow({width: 1200, height: 800});
+	statusWindow = new browserWindow({width: 100, height: 300});
+	consoleWindow = new browserWindow(width: 1200, height: 90);
+
+	mapWindow.loadURL(url.format({
 		pathname: path.join(__dirname, 'views/index.html'),
 		protocol: 'file:',
 		slashes: true
 	}));
-	mainWindow.on('closed', () => {
+
+	statusWindow.on('closed', () => {
+		statusWindow = null;
+	});
+
+	consoleWindow.on('closed', () => {
+		consoleWindow = null;
+	});
+
+	mapWindow.on('closed', () => {
 		mainWindow = null;
 	});
 });
-
-
-
