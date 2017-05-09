@@ -9,64 +9,15 @@
 from mav import Mavlink
 from mission import Mission
 from utils import Utils
+from flask import Flask, render_template
+from flask_socketio import SocketIO
 
-# --> Sorry I'm breaking my own rule.
-import Tkinter
-from Tkinter import *
-
+import thread
 import json
 import sys
 import time
 
 util = Utils()
-
-#===============================================
-#		Control Class for GUI
-#
-#	Description: Provides a control medium
-#	for us to change values in the Tkinter
-#	window.
-#
-#===============================================
-class FELCApp:
-	def __init__(self, master):
-
-		master.title('POKEMON:FSC')
-		master.configure(bg='black')
-
-		self.lon = IntVar()
-		self.lat = IntVar()
-		self.freq = IntVar()
-		self.srvtime = StringVar()
-
-		# Set initial Values for Window
-		self.lon.set(000.000000)
-		self.lat.set(000.000000)
-		self.freq.set(00)
-		self.srvtime.set("0000-00-00 00:00:00.000000")
-
-		frame = Frame(master)
-		frame.grid()
-
-		f2 = Frame(master, width=600, height=300)
-		f2.grid()
-
-	def changeVal(self, ident, val):
-		if ident == "lon":
-			self.lon.set(val)
-		elif ident == "lat":
-			self.lat.set(val)
-		elif ident == "freq":
-			self.freq.set(val)
-		elif ident == "srvtime":
-			self.srvtime.set(val)
-		else:
-			util.errlog("identity of tkinter value not found."+ident)
-
-
-statusRoot = Tk()
-FELC = FELCApp(statusRoot)
-
 
 try:
 	# Extract JSON data from configs.
@@ -107,11 +58,24 @@ missPacket = miss.getMissionComponents()
 packets_sent = 0
 startTime = time.time()
 
-# Starting the Tkinter window to display telemetry and frequency in an organized way.
-util.log("Initiating telemetry status console front end.")
-statusRoot.mainloop()
+# Starting front end components.
+util.log("Initiating telemetry status console front end")
 
 util.log("Ready to recieve Mavlink Packets...")
+
+packets_sent = 0
+def postTelem(telemetry):
+        global packets_sent
+
+        # post telemetry to the Competition server.
+        miss.postTelemetry(
+                telemetry['latitude'],
+                telemetry['longitude'],
+                telemetry['altitude'],
+                telemetry['heading']
+        )
+        packets_sent += 1
+
 while True:
 	try:
         	udpPacket = mavl.getMavPacket()
@@ -119,7 +83,7 @@ while True:
         	if(udpPacket != None):
 
                 	if (udpPacket.get_type() == "GLOBAL_POSITION_INT"):
-                        	telemPacket = udpPacket
+	                       	telemPacket = udpPacket
 
 				# populate the longitude element of the telemetry module
 				telemetry['longitude'] = float(telemPacket.lon)/10000000
@@ -130,31 +94,27 @@ while True:
 #				print telemetry
 
 				if (miss.isLoggedIn()):
+#					thread.start_new_thread(postTelem, (telemetry,))
+					postTelem(telemetry)
+#					print telemetry
 
-					# post telemetry to the Competition server.
-					miss.postTelemetry(
-							telemetry['latitude'],
-							telemetry['longitude'],
-							telemetry['altitude'],
-							telemetry['heading']
-					  	)
-					packets_sent += 1
-
-#				if(missPacket != None):
-#					print missPacket
-
-#		missPacket = miss.getMissionComponents()
+		if missPacket != None:
+			pass
+#			print missPacket
+		missPacket = miss.getMissionComponents()
 
 		# Recalculate the number of seconds elapsed
 		elapsed = time.time() - startTime
 
 		# If one second has elapsed reset the clock and print the frequency.
 		if elapsed >= 1:
+			global packets_sent
 			telemetry['frequency'] = packets_sent
-			#print telemetry['frequency']
+#			print telemetry['frequency']
 
 			startTime = time.time()
 			packets_sent = 0
 
 	except KeyboardInterrupt:
 		break
+
