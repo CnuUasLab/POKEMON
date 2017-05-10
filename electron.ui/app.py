@@ -37,15 +37,17 @@ def background_thread():
 
                                 system_time = miss.getMissionTime()
 
-				emit('telemetry', telemetry, broadcast=True)
-				emit('System-Time', system_time, broadcast=True)
+				socketio.emit('tele',
+				              {'data': telemetry, 'count': count},
+				                namespace='/test')
+				socketio.emit('srvTime',
+				              {'data': server_time, 'count': count},
+				                namespace='/test')
                                 print system_time
 
 				socketio.sleep(10)
 				count += 1
-				socketio.emit('my_response',
-				              {'data': 'Server generated event', 'count': count},
-				                namespace='/test')
+				
 
 
 @app.route('/')
@@ -75,45 +77,6 @@ def join(message):
     emit('my_response',
          {'data': 'In rooms: ' + ', '.join(rooms()),
           'count': session['receive_count']})
-
-
-@socketio.on('leave', namespace='/test')
-def leave(message):
-    leave_room(message['room'])
-    session['receive_count'] = session.get('receive_count', 0) + 1
-    emit('my_response',
-         {'data': 'In rooms: ' + ', '.join(rooms()),
-          'count': session['receive_count']})
-
-
-@socketio.on('close_room', namespace='/test')
-def close(message):
-    session['receive_count'] = session.get('receive_count', 0) + 1
-    emit('my_response', {'data': 'Room ' + message['room'] + ' is closing.',
-                         'count': session['receive_count']},
-         room=message['room'])
-    close_room(message['room'])
-
-
-@socketio.on('my_room_event', namespace='/test')
-def send_room_message(message):
-    session['receive_count'] = session.get('receive_count', 0) + 1
-    emit('my_response',
-         {'data': message['data'], 'count': session['receive_count']},
-         room=message['room'])
-
-
-@socketio.on('disconnect_request', namespace='/test')
-def disconnect_request():
-    session['receive_count'] = session.get('receive_count', 0) + 1
-    emit('my_response',
-         {'data': 'Disconnected!', 'count': session['receive_count']})
-    disconnect()
-
-
-@socketio.on('my_ping', namespace='/test')
-def ping_pong():
-    emit('my_pong')
 
 
 @socketio.on('connect', namespace='/test')
