@@ -48,6 +48,8 @@ class Mission():
 		self.mission_components['TAR'] = {}
 		self.mission_components['FLZ'] = {}
 
+		self.sysTime = None
+
 		self.username = usr
 		self.password = pss
 
@@ -148,6 +150,12 @@ class Mission():
 
 		self.mission_components['STI'] = self.client.get(self.URIs['TEL']).json()[len(self.client.get(self.URIs['TEL']).json())-1]['timestamp']
 
+	#=====================
+	# Get the system time.
+	#---------------------
+	#=====================
+	def getSystemTime(self):
+		return self.mission_components['STI']
 
 	#=============================
 	# 	   Post a detected target on
