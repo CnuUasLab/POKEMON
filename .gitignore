@@ -1,3 +1,4 @@
 src/*.pyc
 node_modules/
-electron.ui/map_app/img/waypoint.icons
+electron.ui/static/map_app/img/waypoint.icons
+electron.ui/static/map_app/tiles
