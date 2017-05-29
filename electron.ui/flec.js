@@ -27,20 +27,11 @@ app.on('window-on-closed', () => {
 app.on('ready', () => {
 	mapWindow = new browserWindow({width: 1200, height: 800});
 	statusWindow = new browserWindow({width: 100, height: 300});
-	consoleWindow = new browserWindow(width: 1200, height: 90);
 
-	mapWindow.loadURL(url.format({
-		pathname: path.join(__dirname, 'views/index.html'),
-		protocol: 'file:',
-		slashes: true
-	}));
+	mapWindow.loadURL("http://127.0.0.1:5000");
 
 	statusWindow.on('closed', () => {
 		statusWindow = null;
-	});
-
-	consoleWindow.on('closed', () => {
-		consoleWindow = null;
 	});
 
 	mapWindow.on('closed', () => {

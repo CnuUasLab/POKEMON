@@ -1,5 +1,6 @@
-#!/usr/bin/env python
-from flask import Flask, render_template, session, request
+#!/usr/bin/python
+
+from flask import Flask, render_template, session, request, send_from_directory
 from flask_socketio import SocketIO, emit, join_room, leave_room, \
     close_room, rooms, disconnect
 
@@ -18,7 +19,7 @@ from mission import Mission
 # the best option based on installed packages.
 async_mode = None
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/static')
 app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app, async_mode=async_mode)
 thread = None
@@ -65,7 +66,7 @@ def background_thread():
 	count = 0
 	telemetry = {}
 	util.log("Hello - Websocketing thread initiated")
-	socketio.sleep(3)
+	socketio.sleep(0)
 
 	"""Example of how to send server generated events to clients."""
 	while True:
@@ -81,7 +82,7 @@ def background_thread():
 				# populate the longitude element
 				telemetry['longitude'] = float(telemPacket.lon)/10000000
 				telemetry['latitude'] = float(telemPacket.lat)/10000000
-				telemetry['heading'] = float(telemPacket.hdg)/1000
+				telemetry['heading'] = float(telemPacket.hdg)/100
 				telemetry['altitude'] = float(telemPacket.alt)/10000
 
                                	system_time = miss.getSystemTime()
@@ -96,8 +97,18 @@ def background_thread():
 
 @app.route('/')
 def index():
-    return render_template('index.html', async_mode=socketio.async_mode)
+	return render_template('index.html', async_mode=socketio.async_mode)
 
+@app.route('/status')
+def status():
+	return render_template('status.html', async_mode=socketio.async_mode)
+#@app.route('/js/OpenLayers')
+#def ol2():
+#        return send_from_directory('js', './ol2/lib/OpenLayers.js')
+
+#@app.route('/js/map')
+#def map():
+#        return send_from_directory('js', './map_app/app.js')
 
 @socketio.on('my_event', namespace='/test')
 def test_message(message):
