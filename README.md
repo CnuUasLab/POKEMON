@@ -15,7 +15,7 @@ sudo apt-get install python-dev
 sudo apt-get install python-pip
 
 You should be able to install everything from the requirements list run:
-`sudo pip install -r requirements.txt`
+</br>`sudo pip install -r requirements.txt`
 
 You also need to update the competition's interoperability competition server repository so that we can use their client tools:
 </br> `git submodule init`
