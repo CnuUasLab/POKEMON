@@ -14,11 +14,8 @@ Make sure you have the python dev packages availble:
 sudo apt-get install python-dev
 sudo apt-get install python-pip
 
-The basic setup involves installing pymavlink as a dependency:
-`sudo pip install pymavlink`
-
 You should be able to install everything from the requirements list run:
-`sudo pip install requirements.txt`
+`sudo pip install -r requirements.txt`
 
 You also need to update the competition's interoperability competition server repository so that we can use their client tools:
 </br> `git submodule init`
