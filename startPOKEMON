@@ -46,5 +46,9 @@ $CMD python main.py &
 cd $BASE_DIR
 $CMD electron . &
 
+# Run the script that starts the webserver
+cd $BASE_DIR/electron.ui
+python app.py
+
 
 #########    END OF SCRIPT   ##########
