@@ -17,9 +17,8 @@ sudo apt-get install python-pip
 The basic setup involves installing pymavlink as a dependency:
 `sudo pip install pymavlink`
 
-Other packages to download: 
-`sudo pip install futures`
-`sudo pip install requests`
+You should be able to install everything from the requirements list run:
+`sudo pip install requirements.txt`
 
 You also need to update the competition's interoperability competition server repository so that we can use their client tools:
 </br> `git submodule init`
