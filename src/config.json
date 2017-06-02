@@ -6,11 +6,6 @@
 	"password":"testpass"
     },
 
-    "http":{
-        "host":"127.0.0.1",
-        "port":"80"
-    },
-
     "mavl-incoming":{
         "host":"0.0.0.0",
         "port":"14550"
