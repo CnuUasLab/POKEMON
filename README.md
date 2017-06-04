@@ -31,6 +31,9 @@ Main automation testing is done through Software in the Loop (SITL)
 When you execute SITL, load the main Waypoint data, and then run.
 Find your ip address on your computer by typing `ifconfig` in command line.
 
+The program in it's entirety can be run with the initiation script:
+`./startPOKEMON`
+
 The IP address needs to be added to SITL's output by adding it through `output add <ipaddr>:14550`
 When you Add that and then run: `cd src && python main.py` the command should run.
 
