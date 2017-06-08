@@ -12,37 +12,6 @@ class bcolors:
 		UNDERLINE = '\033[4m'
 		ERROR = '\033[1;41m'
 
-# Using this as a Template
-"""
-class Singleton:
-	def __init__(self, decorated):
-		self.logs = []
-		self._decorated = decorated
-
-	def Instance(self):
-		try:
-			return self._instance
-		except AttributeError:
-			self._instance = self._decorated
-			return self._instance
-
-	def __call__(self):
-		raise TypeError('Singletons must be accessed through `Instance()`.')
-
-	def __instancecheck__(self, inst):
-		return isinstance(inst, self._decorated)
-"""
-
-"""
-def b_colors(myClass):
-	instances = {}
-	def getColor(first, string, second):
-		if myClass not in instances:
-			instances[myClass] = myClass(first, string, second)
-			print instances[myClass]
-		return instances[myClass]
-	return getColor
-"""
 class Singleton(type):
 	def __init__(cls, string, extra, what):
 		super(Singleton, cls).__init__(string)
