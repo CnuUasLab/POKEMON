@@ -1,5 +1,17 @@
 import os
 
+class bcolors:
+		HEADER = '\033[95m'
+		OKBLUE = '\033[94m'
+		OKGREEN = '\033[92m'
+		WARNING = '\033[93m'
+		FAIL = '\033[91m'
+		ENDC = '\033[0m'
+		BOLD = '\033[1m'
+		SUCCESS = '\033[1;42m'
+		UNDERLINE = '\033[4m'
+		ERROR = '\033[1;41m'
+
 # Using this as a Template
 """
 class Singleton:
@@ -32,49 +44,41 @@ def b_colors(myClass):
 	return getColor
 """
 class Singleton(type):
-	def __init__(self, first, string, second):
-		super().__init__()
-		self._instance = None
+	def __init__(cls, string, extra, what):
+		super(Singleton, cls).__init__(string)
+		cls.instance = None
 
-	def __call__(self, first, string, second):
-		if self._instance is None:
-			self._instance = super().__call__(*args, **kwargs)
-		return self._instance
+	def __call__(cls, *args, **kwargs):
+		if cls.instance is None:
+			print "Creating NEW instance"
+			cls.instance = super(Singleton, cls).__call__(*args, **kwargs)
+		else:
+			print "Using EXISTING instance"
+		return cls.instance	
 
 
-@Singleton
-class Utils:
 
-	class bcolors:
-		HEADER = '\033[95m'
-		OKBLUE = '\033[94m'
-		OKGREEN = '\033[92m'
-		WARNING = '\033[93m'
-		FAIL = '\033[91m'
-		ENDC = '\033[0m'
-		BOLD = '\033[1m'
-		SUCCESS = '\033[1;42m'
-		UNDERLINE = '\033[4m'
-		ERROR = '\033[1;41m'
+class Utils(object):
+
+	__metaclass__ = Singleton
+
+	def __init__(self, arg = None):
+		print "creating instance with arg: ", arg
+		self.logs = []
+		self.currLog = 'Initialized'
 
 	def log(self, string):
-#		print bcolors.BOLD + string + bcolors.ENDC
-		x = getColor(BOLD, string, ENDC)
-		print x
+		print bcolors.BOLD + string + bcolors.ENDC
 		self.currLog = string
 		self.logs.append(string)
 
 	def errLog(self, string):
-#		print bcolors.ERROR + string + bcolors.ENDC
-		getColor(ERROR, string, ENDC)
-
+		print bcolors.ERROR + string + bcolors.ENDC
 		self.currLog = string
 		self.logs.append(string)
 
 	def succLog(self, string):
-#		print bcolors.SUCCESS + string + bcolors.ENDC
-		getColor(SUCCESS, string, ENDC)
-
+		print bcolors.SUCCESS + string + bcolors.ENDC
 		self.currLog = string
 		self.logs.append(string)
 
@@ -86,5 +90,13 @@ class Utils:
 		for word in self.getPreviousLogs():
 			f.write(word)
 
-x = Utils()
-x.log('Something')
+# creates a new instance of Utils
+x = Utils("Something")
+x.log("error")
+
+print('\n')
+
+# since object exists, no need to create a new one
+# instead, use the existing instance of Utils
+y = Utils("DJ KHALED")
+y.log("WE THE BEST")
