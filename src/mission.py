@@ -13,7 +13,7 @@ import re
 from utils import Utils
 
 sys.path.insert(0, "../interop/client/")
-import interop
+#import interop
 
 #==================================
 #
@@ -56,10 +56,10 @@ class Mission():
 
 		self.logged_in = False
 		try:
-			self.client = interop.Client( url=self.host+":"+self.port,
-							username=self.username,
-							password=self.password
-							)
+#			self.client = interop.Client( url=self.host+":"+self.port,
+#							username=self.username,
+#							password=self.password
+#							)
 			self.logged_in = True
 			self.util.succLog("Successfully logged into competition server.")
 
@@ -67,7 +67,7 @@ class Mission():
 			thread.start_new_thread(self.populateMissionComponents, ())
 			self.util.succLog("Successfully started mission retrieval thread.")
 
-		except interop.exceptions.InteropError:
+#		except interop.exceptions.InteropError:
 			self.util.errLog("ERROR: Invalid login to competition server.")
 		except requests.exceptions.ConnectionError:
 			self.util.errLog("Connection error with competition server - Are you sure the Server is Running?")
