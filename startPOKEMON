@@ -1,0 +1,54 @@
+#xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+#
+#       Description: This is the start script that inintiates all of
+#                    the pokemon scripts that start off.
+#
+#            Author: davidkroell
+#
+#           Version: 05/30/2017
+#
+#xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+#Command to call for terminal session
+CMD="gnome-terminal -e "
+
+# If the desktop you're on is ubuntu then
+# you're using a gnome session.
+if [ $DESKTOP_SESSION="ubuntu" ]
+then
+    CMD="gnome-terminal -e "
+fi
+
+# if the desktop you're on is xubuntu
+# then you're using an x session
+if [ $DESKTOP_SESSION="xubuntu" ]
+then
+    CMD="xterm -e "
+fi
+
+# if the desktop you're on is kubuntu
+# then you're using a kde session.
+#if [ $DESKTOP_SESSION="kubuntu" ]
+#then
+    # CMD="konsole -e " # --> ubuntu got pissed off with me...
+#fi
+
+# If you're on anything else, you're insane.
+# gnome is native to fedora.
+
+BASE_DIR=$PWD
+
+# start the backend console.
+cd $BASE_DIR/src/
+$CMD python main.py &
+
+# start front end electron application.
+cd $BASE_DIR
+$CMD electron . &
+
+# Run the script that starts the webserver
+cd $BASE_DIR/electron.ui
+python app.py
+
+
+#########    END OF SCRIPT   ##########

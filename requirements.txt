@@ -1,0 +1,4 @@
+pymavlink
+futures
+requests
+flask-socketio

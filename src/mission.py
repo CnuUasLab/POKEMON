@@ -1,6 +1,6 @@
 #============================================#
 #					     #
-#		Mission Handeler             #
+#		Mission Handler              #
 #					     #
 #	      Author: davidkroell	     #
 #					     #
@@ -9,6 +9,7 @@
 import sys
 import requests
 import thread
+import re
 from utils import Utils
 
 sys.path.insert(0, "../interop/client/")
@@ -129,6 +130,59 @@ class Mission():
 		r = self.client.get(self.URIs['OBS'])
 		return r.json()
 
+        #=================================================
+        # Post a target to the server that may
+        #  or may not have image data with it.
+        #
+        #--------------params:--------------
+        #     pId                   -  Optional. The ID of the target.
+        #     pUser                 -  Optional. The ID of the user who created the target.
+        #     pType                 -  Target type, must be one of TargetType.
+        #     pLat                  -  Optional. Target latitude in decimal degrees.
+        #     pLon                  -  Optional. Target longitude in decimal degrees.
+        #     pOrient               -  Optional. Target orientation.
+        #     pShape                -  Optional. Target shape.
+        #     pBgColor              -  Optional. Target color.
+        #     pAlphanumeric         -  Optional. Target alphanumeric. [0-9, a-z, A-Z].
+        #     pAlphanumericColor    -  Optional. Target alphanumeric color.
+        #     pDescription          -  Optional. Free-form description of the target.
+        #     pAutonomous           -  Defaults to False. Indicates that this is an ADLC target.
+        #     pTeamId               -  Optional. The username of the team to submit targets.
+        #     pActionableOverride   -  Optional. Manually sets the target to be actionable.
+        #     pImagePath            -  Optional. Image path to be specified if involved in post.
+        #=================================================
+        def postTarget(self, pId, pUser, pType, pLat, pLon, pOrient, pShape,
+                       pBgColor, pAlphanumeric, pAlphanumericColor, pDescription,
+                       pAutonomous=False, pTeamId="CNU_IMPRINT", pActionableOverride,
+                       pImagePath=None):
+
+                imageAvailable = (pImagePath != None)
+                
+                mTarget = interop.Target(id=pId, user=pUser, type=pType,
+                                        latitutde=pLat, longitude=pLon,
+                                        orientation=pOrient, shape=pShape,
+                                        background_color=pBgColor, alphanumeric=pAlphanumeric,
+                                        alphanumeric_color=pAlphanumericColor, description=pDescription,
+                                        autonomous=pAutonomous, team_id=pTeamId,
+                                        actionable_override=pActionableOverride)
+
+                if(self.client.isLoggedIn()):
+                        self.client.post_target(mTarget)
+                        if(imageAvailable):
+                                fileTypes = ['.jpg', '.png']
+                                imagePathValid = False
+                                for fileType in fileTypes:
+                                        if(pImagePath.endswith(fileType)):
+                                                imagePathValid = True
+
+                                if(imagePathValid):
+                                        try:
+                                                mImage = Image(pImagePath)
+                                                self.client.post_target_image(pId, mImage)
+                                        except IOException:
+                                                self.util.err("ERROR: Error loading image file.")
+                
+        
 	#========================
 	# Post telemetry to the server.
 	#
