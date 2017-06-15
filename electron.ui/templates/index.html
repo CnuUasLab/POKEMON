@@ -64,7 +64,8 @@
 		});
 
 		socket.on('obs', function(obj) {
-		    arrMovObstacles(obj)
+		    console.log(obj.data)
+		    arrMovObst(obj.data)
 		});
 
 	});

@@ -96,7 +96,9 @@ def background_thread():
                                 if(miss_packet != None):
                                         
                                         obstacle = miss_packet['OBS']
+                                        print obstacle
                                         waypoints = miss_packet['WYP']
+                                        print waypoints
                                         socketio.emit('obs', {'data': obstacle, 'count': count}, namespace='/test')
                                         socketio.emit('wyp', {'data': waypoints, 'count': count}, namespace='/test')
    
