@@ -153,7 +153,7 @@ class Mission():
         #=================================================
         def postTarget(self, pId, pUser, pType, pLat, pLon, pOrient, pShape,
                        pBgColor, pAlphanumeric, pAlphanumericColor, pDescription,
-                       pAutonomous=False, pTeamId="CNU_IMPRINT", pActionableOverride,
+                       pActionableOverride, pAutonomous=False, pTeamId="CNU_IMPRINT",
                        pImagePath=None):
 
                 imageAvailable = (pImagePath != None)

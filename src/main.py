@@ -11,12 +11,15 @@ from mission import Mission
 from utils import Utils
 from flask import Flask, render_template
 from flask_socketio import SocketIO
+from imgclient import IMGClient
 
+import sys
+import socket
 import thread
 import json
 import sys
 import time
-
+        
 util = Utils()
 
 try:
@@ -37,6 +40,11 @@ telemetry = {}
 
 util.succLog("Setting up mavlink recieving protocol - Instantiating modules...")
 
+try:
+        imgr = IMGClient("192.168.133.128:55555")
+        util.succLog("Connection to IMG Server - Successful")
+except socket.gaierror:
+        util.errLog("ERR: No Access to the IMGClient FTP Server")
 
 # Instantiate a Mavlink module.
 mavl = Mavlink(
@@ -75,6 +83,7 @@ def postTelem(telemetry):
                 telemetry['heading']
         )
         packets_sent += 1
+
 
 while True:
 	try:
@@ -117,4 +126,5 @@ while True:
 
 	except KeyboardInterrupt:
 		break
-
+        except sys.stderr:
+                util.errLog("ERR: Exit main on sys call. Terminating Sys call.")
