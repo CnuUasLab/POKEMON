@@ -56,11 +56,18 @@ class Mission():
 
 		self.logged_in = False
 		try:
-			self.client = interop.Client( url=self.host+":"+self.port,
-							username=self.username,
-							password=self.password
-							)
-			self.logged_in = True
+                        while not self.logged_in:
+                                try:
+			                self.client = interop.Client( url=self.host+":"+self.port,
+							              username=self.username,
+							              password=self.password
+				        )
+                                        self.logged_in = True
+                                except requests.ReadTimeout:
+                                        self.logged_in = False
+                                        self.util.log("RETR: Login Competition server")
+
+                        #self.logged_in = True
 			self.util.succLog("Successfully logged into competition server.")
 
 			self.util.log("Attempting to start Competition Server Retrieval Thread.")
