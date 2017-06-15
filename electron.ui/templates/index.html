@@ -32,34 +32,42 @@
 	</div>
 
 	<script type="text/javascript" charset="utf-8">
-		$(document).ready(function() {
-			// Use a "/test" namespace.
-			// An application can open a connection on multiple namespaces, and
-			// Socket.IO will multiplex all those connections on a single
-			// physical channel. If you don't care about multiple channels, you
-			// can set the namespace to an empty string.
-			namespace = '/test';
-			console.log(document.location.path);
-			// Connect to the Socket.IO server.
-			// The connection URL has the following format:
-			//     http[s]://<domain>:<port>[/<namespace>]
-			var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port + namespace);
+	  $(document).ready(function() {
+
+		// Use a "/test" namespace.
+		// An application can open a connection on multiple namespaces, and
+		// Socket.IO will multiplex all those connections on a single
+		// physical channel. If you don't care about multiple channels, you
+		// can set the namespace to an empty string.
+
+		namespace = '/test';
+		console.log(document.location.path);
+
+		// Connect to the Socket.IO server.
+		// The connection URL has the following format:
+		//     http[s]://<domain>:<port>[/<namespace>]
+
+		var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port + namespace);
 	
-			// Event handler for new connections.
-			// The callback function is invoked when a connection with the
-			// server is established.
-			socket.on('connect', function() {
-				console.log("connect");
-				socket.emit('my_event', {data: 'I\'m connected!'});
-			});
-
-			socket.on('tele', function(obj) {
-				//console.log(obj);
-
-				changePlaneLoc(obj.data.longitude, obj.data.latitude, obj.data.heading);
-			});
-
+		// Event handler for new connections.
+		// The callback function is invoked when a connection with the
+		// server is established.
+		socket.on('connect', function() {
+		    console.log("connect");
+		    socket.emit('my_event', {data: 'I\'m connected!'});
 		});
+
+		socket.on('tele', function(obj) {
+		    //console.log(obj);
+
+		    changePlaneLoc(obj.data.longitude, obj.data.latitude, obj.data.heading);
+		});
+
+		socket.on('obs', function(obj) {
+		    arrMovObstacles(obj)
+		});
+
+	});
 	</script>
 </body>
 </html>

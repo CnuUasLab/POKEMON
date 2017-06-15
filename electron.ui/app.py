@@ -89,12 +89,17 @@ def background_thread():
 
 				socketio.emit('tele', {'data': telemetry, 'count': count}, namespace='/test')
 				socketio.emit('srvTime', {'data': system_time, 'count': count}, namespace='/test')
-
 				#socketio.sleep(10)
 				count += 1
 
-
-
+                                miss_packet = miss.getMissionComponents()
+                                if(miss_packet != None):
+                                        
+                                        obstacle = miss_packet['OBS']
+                                        waypoints = miss_packet['WYP']
+                                        socketio.emit('obs', {'data': obstacle, 'count': count}, namespace='/test')
+                                        socketio.emit('wyp', {'data': waypoints, 'count': count}, namespace='/test')
+   
 @app.route('/')
 def index():
 	return render_template('index.html', async_mode=socketio.async_mode)
