@@ -56,10 +56,6 @@ class Mission():
 
 		self.logged_in = False
 		try:
-#			self.client = interop.Client( url=self.host+":"+self.port,
-#							username=self.username,
-#							password=self.password
-#							)
 			self.logged_in = True
 			self.util.succLog("Successfully logged into competition server.")
 
@@ -67,7 +63,7 @@ class Mission():
 			thread.start_new_thread(self.populateMissionComponents, ())
 			self.util.succLog("Successfully started mission retrieval thread.")
 
-#		except interop.exceptions.InteropError:
+		except interop.exceptions.InteropError:
 			self.util.errLog("ERROR: Invalid login to competition server.")
 		except requests.exceptions.ConnectionError:
 			self.util.errLog("Connection error with competition server - Are you sure the Server is Running?")
@@ -130,59 +126,59 @@ class Mission():
 		r = self.client.get(self.URIs['OBS'])
 		return r.json()
 
-        #=================================================
-        # Post a target to the server that may
-        #  or may not have image data with it.
-        #
-        #--------------params:--------------
-        #     pId                   -  Optional. The ID of the target.
-        #     pUser                 -  Optional. The ID of the user who created the target.
-        #     pType                 -  Target type, must be one of TargetType.
-        #     pLat                  -  Optional. Target latitude in decimal degrees.
-        #     pLon                  -  Optional. Target longitude in decimal degrees.
-        #     pOrient               -  Optional. Target orientation.
-        #     pShape                -  Optional. Target shape.
-        #     pBgColor              -  Optional. Target color.
-        #     pAlphanumeric         -  Optional. Target alphanumeric. [0-9, a-z, A-Z].
-        #     pAlphanumericColor    -  Optional. Target alphanumeric color.
-        #     pDescription          -  Optional. Free-form description of the target.
-        #     pAutonomous           -  Defaults to False. Indicates that this is an ADLC target.
-        #     pTeamId               -  Optional. The username of the team to submit targets.
-        #     pActionableOverride   -  Optional. Manually sets the target to be actionable.
-        #     pImagePath            -  Optional. Image path to be specified if involved in post.
-        #=================================================
-        def postTarget(self, pId, pUser, pType, pLat, pLon, pOrient, pShape,
-                       pBgColor, pAlphanumeric, pAlphanumericColor, pDescription,
-                       pAutonomous=False, pTeamId="CNU_IMPRINT", pActionableOverride,
-                       pImagePath=None):
+	#=================================================
+	# Post a target to the server that may
+	#  or may not have image data with it.
+	#
+	#--------------params:--------------
+	#     pId                   -  Optional. The ID of the target.
+	#     pUser                 -  Optional. The ID of the user who created the target.
+	#     pType                 -  Target type, must be one of TargetType.
+	#     pLat                  -  Optional. Target latitude in decimal degrees.
+	#     pLon                  -  Optional. Target longitude in decimal degrees.
+	#     pOrient               -  Optional. Target orientation.
+	#     pShape                -  Optional. Target shape.
+	#     pBgColor              -  Optional. Target color.
+	#     pAlphanumeric         -  Optional. Target alphanumeric. [0-9, a-z, A-Z].
+	#     pAlphanumericColor    -  Optional. Target alphanumeric color.
+	#     pDescription          -  Optional. Free-form description of the target.
+	#     pAutonomous           -  Defaults to False. Indicates that this is an ADLC target.
+	#     pTeamId               -  Optional. The username of the team to submit targets.
+	#     pActionableOverride   -  Optional. Manually sets the target to be actionable.
+	#     pImagePath            -  Optional. Image path to be specified if involved in post.
+	#=================================================
+	def postTarget(self, pId, pUser, pType, pLat, pLon, pOrient, pShape,
+				   pBgColor, pAlphanumeric, pAlphanumericColor, pDescription,
+				   pActionableOverride, pAutonomous=False, pTeamId="CNU_IMPRINT",
+				   pImagePath=None):
 
-                imageAvailable = (pImagePath != None)
-                
-                mTarget = interop.Target(id=pId, user=pUser, type=pType,
-                                        latitutde=pLat, longitude=pLon,
-                                        orientation=pOrient, shape=pShape,
-                                        background_color=pBgColor, alphanumeric=pAlphanumeric,
-                                        alphanumeric_color=pAlphanumericColor, description=pDescription,
-                                        autonomous=pAutonomous, team_id=pTeamId,
-                                        actionable_override=pActionableOverride)
+			imageAvailable = (pImagePath != None)
+			
+			mTarget = interop.Target(id=pId, user=pUser, type=pType,
+									latitutde=pLat, longitude=pLon,
+									orientation=pOrient, shape=pShape,
+									background_color=pBgColor, alphanumeric=pAlphanumeric,
+									alphanumeric_color=pAlphanumericColor, description=pDescription,
+									autonomous=pAutonomous, team_id=pTeamId,
+									actionable_override=pActionableOverride)
 
-                if(self.client.isLoggedIn()):
-                        self.client.post_target(mTarget)
-                        if(imageAvailable):
-                                fileTypes = ['.jpg', '.png']
-                                imagePathValid = False
-                                for fileType in fileTypes:
-                                        if(pImagePath.endswith(fileType)):
-                                                imagePathValid = True
+			if(self.client.isLoggedIn()):
+					self.client.post_target(mTarget)
+					if(imageAvailable):
+							fileTypes = ['.jpg', '.png']
+							imagePathValid = False
+							for fileType in fileTypes:
+									if(pImagePath.endswith(fileType)):
+											imagePathValid = True
 
-                                if(imagePathValid):
-                                        try:
-                                                mImage = Image(pImagePath)
-                                                self.client.post_target_image(pId, mImage)
-                                        except IOException:
-                                                self.util.err("ERROR: Error loading image file.")
-                
-        
+							if(imagePathValid):
+									try:
+											mImage = Image(pImagePath)
+											self.client.post_target_image(pId, mImage)
+									except IOException:
+											self.util.err("ERROR: Error loading image file.")
+				
+		
 	#========================
 	# Post telemetry to the server.
 	#
@@ -195,9 +191,9 @@ class Mission():
 	def postTelemetry(self, lat=38.145245, lon=-76.427946, alt=50, hdg=90):
 
 		telemetry = interop.Telemetry(latitude=lat,
-                              			longitude=lon,
-                              			altitude_msl=alt,
-                              			uas_heading=hdg
+										longitude=lon,
+										altitude_msl=alt,
+										uas_heading=hdg
 						)
 		if (self.isLoggedIn()):
 			self.client.post_telemetry(telemetry)
@@ -230,19 +226,19 @@ class Mission():
 				 bgc='green', letter='A', color='white', image_path='~/image.png'):
 
 		target = interop.Target(type=typ,
-                        latitude=lat,
-                        longitude=lon,
-                        orientation=ori,
-                        shape=shp,
-                        background_color=bgc,
-                        alphanumeric=letter,
-                        alphanumeric_color=color)
+						latitude=lat,
+						longitude=lon,
+						orientation=ori,
+						shape=shp,
+						background_color=bgc,
+						alphanumeric=letter,
+						alphanumeric_color=color)
 
 		target = client.post_target(target)
 
 		with open(image_path, 'rb') as f:
-    			image_data = f.read()
-    			self.client.put_target_image(target.id, image_data)
+				image_data = f.read()
+				self.client.put_target_image(target.id, image_data)
 
 	#==========================
 	#

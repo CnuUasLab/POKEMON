@@ -1,4 +1,21 @@
+#======================================
+#
+#			Logging Utilities
+#
+#
+#	Displays error logs if mission.py
+#	or Main.py encounters errors.
+#
+#
+#======================================
+
 import os
+
+#=================
+#
+# ASCII Color/Font Codes
+#
+#=================
 
 class bcolors:
 		HEADER = '\033[95m'
@@ -12,6 +29,15 @@ class bcolors:
 		UNDERLINE = '\033[4m'
 		ERROR = '\033[1;41m'
 
+#========================
+#
+#	Metaclass Singleton
+#
+# using the same instance
+# instead of creating new
+# objects.
+#
+#========================
 class Singleton(type):
 	def __init__(cls, string, extra, what):
 		super(Singleton, cls).__init__(string)
@@ -25,8 +51,14 @@ class Singleton(type):
 			print "Using EXISTING instance"
 		return cls.instance	
 
-
-
+#============================
+#
+#	Utils calls Singleton class
+#	and checks if the instance
+#	exists. Use same object to
+#	create different log messages
+#
+#============================
 class Utils(object):
 
 	__metaclass__ = Singleton
@@ -53,19 +85,4 @@ class Utils(object):
 
 	def getPreviousLogs(self):
 		return self.logs
-
-	def dump(self):
-		f = open("./dumpFile.txt","w+")
-		for word in self.getPreviousLogs():
-			f.write(word)
-
-# creates a new instance of Utils
-x = Utils("Something")
-x.log("error")
-
-print('\n')
-
-# since object exists, no need to create a new one
-# instead, use the existing instance of Utils
-y = Utils("DJ KHALED")
-y.log("WE THE BEST")
+		
