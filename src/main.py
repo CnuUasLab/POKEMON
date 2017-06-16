@@ -40,11 +40,11 @@ telemetry = {}
 
 util.succLog("Setting up mavlink recieving protocol - Instantiating modules...")
 
-try:
-        imgr = IMGClient("192.168.133.128:55555")
-        util.succLog("Connection to IMG Server - Successful")
-except socket.gaierror:
-        util.errLog("ERR: No Access to the IMGClient FTP Server")
+#try:
+#        imgr = IMGClient("localhost", "cnuuas", "N0Ax1s")
+#        util.succLog("Connection to IMG Server - Successful")
+#except socket.gaierror:
+#        util.errLog("ERR: No Access to the IMGClient FTP Server")
 
 # Instantiate a Mavlink module.
 mavl = Mavlink(
@@ -101,7 +101,8 @@ while True:
 				telemetry['altitude'] = float(telemPacket.alt)/10000
 
 #				print telemetry
-
+                                print miss.getSystemTime()
+                                
 				if (miss.isLoggedIn()):
 #					thread.start_new_thread(postTelem, (telemetry,))
 					postTelem(telemetry)

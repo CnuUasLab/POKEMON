@@ -9,33 +9,110 @@
 			height:400px;
 			width:600px;
 			background-color:black;
-			color:#8b8b8b;
+		        color:#ececec;
+		}
+
+		table {
+		    border: 3px solid #aaaaaa;
 		}
 	</style>
 
 </head>
-<body>
+<body bgcolor="#000000">
 
-	<div id="Status-Window">
-	  <table style="width: 600px; height 400px">
+  <div id="Status-Window">
+    <li style="border: 3px solid #1a1a1a; margin-left:0px; list-style-type:none;"><div style="margin-left:30px;"><b>Server Time: </b> <a id="srv">{}</a></div> <b> Frequency: </b> <a id="freq">00</a>Hz</li>
+    <li style="margin-left: 5px; margin-top:5px; position:fixed; list-style-type:none;"> <b> Plane Telemetry: </b> </li>
+    	  <table style="width: 580px; height 400px; margin-left:10px; margin-top:-20px;">
+	    </br>
 	    <tr style="border: 2px solid white">
 	      <th>Latitude</th>
-	      <td>0000000000.00</td>
+	      <td id="lat">0000000000.00</td>
 	    </tr>
 	    </br>
 	    <tr style="border: 2px solid white">
-	      <th>Longitude</th>
-	      <td>0000000000.00</td>
+	      <th>Longitude: </th>
+	      <td id="lon">0000000000.00</td>
 	    </tr>
 	    </br>
 	    <tr style="border: 2px solid white">
-	      <th>Altitude</th>
-	      <td>00000000000m</td>
+	      <th>Altitude: </th>
+	      <td id="alt">00000000000m</td>
+	    </tr>
+	    <tr style="border: 2px solid white">
+	      <th>Heading: </th>
+	      <td id="hdg">000</td>
+	    </tr>
+	  </table>
+
+	  <li style="margin-left: 5px; margin-top:5px; list-style-type:none;"> <b> Targets: </b> </li>
+	  <table style="width: 580px; height 400px; margin-left:10px; margin-top:-50px;">
+	    <tr>
+	      <th> Emergent Last Known: </th>
+	    </tr>
+	    <tr>
+	      <tr>
+	      </br>
+	      <th>Longitude</th><td id="emer-lon">0000000</td>
+	      </br>
+	      </tr>
+	      <tr>
+	      <th>Latitude</th><td id="emer-lat">0000000</td>
+	      </br>
+	      </tr>
+	    </tr>
+	  </table>
+	  
+	  <table style="width: 290px; height 400px; margin-left:10px; margin-top:-30px;">
+	    <tr>
+	      <th> Off-Axis Target: </th>
+	    </tr>
+	    <tr>
+	      </br>
+	      <tr>
+	      <th>Longitude</th><td id="oa-lon">00000000</td>
+	      </br>
+	      </tr>
+	      <tr>
+	      <th>Latitude</th><td id="oa-lat">000000000</td>
+	      </br>
+	      </tr>
+	    </tr>
+	  </table>
+
+	  <table style="width: 290px; height 400px; margin-left:305px; margin-top:-136px; position:relative;">
+	    <tr>
+	      <th> AirDrop Target: </th>
+	    </tr>
+	    <tr>
+	    </br>
+	    <tr>
+	    <th>Longitude</th><td id="ad-lon">00000000</td>
+	    </br>
+	    </tr>
+	    <tr>
+	      <th>Latitude</th><td id="ad-lat">000000000</td>
+	    </br>
+	    </tr>
 	    </tr>
 	    </table> 
 	</div>	
 	<script type="text/javascript" charset="utf-8">
-		$(document).ready(function() {
+
+	  var lat = document.getElementById('lat');
+	  var lon = document.getElementById('lon');
+	  var hdg = document.getElementById('hdg');
+	  var alt = document.getElementById('alt');
+	  var srv = document.getElementById('srv');
+
+	  function setValue(id,newvalue) {
+
+	      var s= document.getElementById(id);
+	      s.value = newvalue;
+	  }
+	  
+	  $(document).ready(function() {
+	  
 			// Use a "/test" namespace.
 			// An application can open a connection on multiple namespaces, and
 			// Socket.IO will multiplex all those connections on a single
@@ -57,15 +134,32 @@
 			});
 
 			socket.on('tele', function(obj) {
-				//console.log(obj);
-
-		                
-			});
+		                //console.log(obj);
+		
+		                document.getElementById("lat").textContent = obj.data.latitude;
+		                document.getElementById("lon").textContent = obj.data.longitude;
+		                document.getElementById("hdg").textContent = obj.data.heading;
+		                document.getElementById("alt").textContent = obj.data.altitude;
+                                document.getElementById("freq").textContent = obj.data.frequency;
+		        });
 
 			socket.on('srvTime', function(obj) {
-				
-				
-			});
+				document.getElementById("srv").textContent = obj.data;
+		                console.log(obj);
+		});
+
+		socket.on('tar', function(obj) {
+		//console.log(obj);
+		document.getElementById("emer-lon").textContent = obj.data.emergent_lastKnown.longitude;
+		document.getElementById("emer-lat").textContent = obj.data.emergent_lastKnown.latitude;
+
+		document.getElementById("oa-lon").textContent = obj.data.off_axis.longitude;
+		document.getElementById("oa-lat").textContent = obj.data.off_axis.latitude;
+
+		document.getElementById("ad-lon").textContent = obj.data.air_drop.longitude;
+		document.getElementById("ad-lat").textContent = obj.data.air_drop.latitude;
+		});
+
 		});
 	</script>
 </body>

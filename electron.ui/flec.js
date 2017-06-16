@@ -26,11 +26,13 @@ app.on('window-on-closed', () => {
 // Create Browser window
 app.on('ready', () => {
 	mapWindow = new browserWindow({width: 1200, height: 800});
-	statusWindow = new browserWindow({width: 100, height: 300});
+	statusWindow = new browserWindow({width: 630, height: 430});
 
 	mapWindow.loadURL("http://127.0.0.1:5000");
 
-	statusWindow.on('closed', () => {
+        statusWindow.loadURL("http://127.0.0.1:5000/status");
+
+        statusWindow.on('closed', () => {
 		statusWindow = null;
 	});
 

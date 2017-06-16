@@ -10,7 +10,9 @@
 #==============================================================#
 import ftplib
 import thread
+import os
 
+from utils import Utils
 #===================================================
 #
 # Constructor for the IMG client over the
@@ -28,15 +30,29 @@ class IMGClient():
         self.url = pHost
         self.ftp = ftplib.FTP(self.url)
 
+        self.util = Utils()
+        
+        if(pUser != None and pPass != None):
+            try:
+                self.ftp.login(pUser, pPass)
+            except e:
+                pass
+
         self.img_lib = {}
         self.files = ["."]
+
         try:
-            self.files = ftp.nlst()
+            self.files = self.ftp.nlst()
         except ftplib.error_perm, resp:
             if str(resp) == "550 No files found":
                 print "Error no files found in the directory."
             else:
                 raise
+
+        try:
+            os.makedirs("./img/")
+        except OSError:
+            self.util.log("src/img/ already exists.")
 
         thread.start_new_thread(self.streamFiles, ())
         self.updating = False
@@ -52,14 +68,13 @@ class IMGClient():
         while True:
             try:
 
-                self.files = ftp.nlst()
+                self.files = self.ftp.nlst()
 
                 self.updating = True
 
-                for f in files:
-                    file = None
-                    self.ftp.retrbinary("RETR " + f, file = open(f, 'wb').write)
-                    self.img_lib[str(f)] = file
+                for f in self.files:
+                    self.ftp.retrbinary("RETR " + f, open("./img/"+f, 'wb').write)
+                    self.img_lib[str(f)] = open("./img/" + f, 'rb')
                     
                 self.updating = False
                 
