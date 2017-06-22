@@ -1,0 +1,2 @@
+cd src
+python utils_test.py
