@@ -2,7 +2,7 @@
 
 #=======================================================#
 
-# Main class for handeling Interoperability operations. #
+# Test Class for building interoperability base code op #
 
 #                                                       #
 
