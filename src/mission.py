@@ -100,7 +100,7 @@ class Mission():
 				self.mission_components['FLZ'] = mission_data['fly_zones']
 
 				self.mission_components['TAR']['emergent_lastKnown'] = mission_data['emergent_last_known_pos']
-				self.mission_components['TAR']['off_axis'] = mission_data['off_axis_target_pos']
+				self.mission_components['TAR']['off_axis'] = mission_data['off_axis_odlc_pos']
 				self.mission_components['TAR']['air_drop'] = mission_data['air_drop_pos']
 
 				self.mission_components['OBS'] = obstacle_data
